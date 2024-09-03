@@ -1,5 +1,11 @@
 <?php
 
+function luasLingkaran($jari) : float 
+{
+    $luas = 3.14*$jari*$jari;
+    return $luas;
+}
+
 function kelilingLingkaran($jari) : float 
 {
     return 2 * 3.14 * $jari;
@@ -20,6 +26,8 @@ function volumeKerucut($jari, $tinggi) : float
     return (1/3) * 3.14 * $jari * $jari * $tinggi;
 }
 
+$luas_lingkaran = luasLingkaran(45);
+echo "Luas lingkaran adalah {$luas_lingkaran}";
 
 $keliling = kelilingLingkaran($jari);
 echo "Keliling lingkaran adalah {$keliling}\n";
