@@ -1,5 +1,8 @@
 <?php
-class Tabung
+
+namespace App\Shape;
+
+class Bola
 {
     const PHI = 3.14;
     public $jari_jari;
@@ -8,7 +11,7 @@ class Tabung
         $this->jari_jari = $jari_jari;
     }
 
-    public function volume($tinggi): float {
-        return self::PHI * pow($this->jari_jari, 2) * $tinggi;
+    public function volume(): float {
+        return (4 / 3) * self::PHI * pow($this->jari_jari, 3);
     }
 }
