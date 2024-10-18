@@ -5,7 +5,7 @@ use App\View;
 require_once 'vendor/autoload.php';
 
 $author = new Author();
-$author->id = 6;
-$author->name = 'Dian Prawira';
-$author->description = 'Email: wiraaja@gmail.com';
+$author->id = 12;
+$author->name = 'Chika Yunita Bahri';
+$author->description = 'Chika Yunita Bahri adalah seorang author pemula';
 View::json($author->save());
