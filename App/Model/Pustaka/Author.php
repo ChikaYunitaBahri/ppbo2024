@@ -25,6 +25,26 @@ class Author extends Model
         return $result;
     }
 
+    public static function all(): array
+    {
+        $authors = [];
+        $model = new Model();
+        $db = $model->getDB();
+        $stmt = $db->prepare("SELECT * FROM author");
+        if ($stmt->execute()) {
+            $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            foreach ($results as $key => $item) {
+                $authors[$key] = new Author();
+                $authors[$key]->id = $item['id'];
+                $authors[$key]->name = $item['name'];
+                $authors[$key]->description = $item['description'];
+
+            }
+        } else {
+            $authors = null;
+        }
+        return $authors;
+    }
 
     public function show(): array
     {
