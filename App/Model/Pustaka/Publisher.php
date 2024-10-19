@@ -35,8 +35,12 @@ class Publisher extends Model
         $stmt = $db->prepare("SELECT * FROM publisher");
         if ($stmt->execute()) {
             $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-            foreach ($results as $item) {
-                $publishers[] = new Publisher($item['id'], $item['name'], $item['address'], $item['phone']);
+            foreach ($results as $key => $item) {
+                $publishers[$key] = new Publisher();
+                $publishers[$key]->id = $item['id'];
+                $publishers[$key]->name = $item['name'];
+                $publishers[$key]->address = $item['address'];
+                $publishers[$key]->phone =$item['phone'];
             }
         } else {
             $publishers = null;
