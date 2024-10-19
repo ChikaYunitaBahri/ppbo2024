@@ -2,23 +2,60 @@
 
 namespace App\Model\Pustaka;
 
-class Publisher
+use App\Model\Model;
+
+class Publisher extends Model
 {
-    public $name;
-    public $address;
-    private $phone;
+    public int $id;
+    public string $name;
+    public string $address;
+    public string $phone;
 
-    public function __construct($name, $address, $phone) {
-        $this->name = $name;
-        $this->address = $address;
-        $this->phone = $phone;
+    public function save()
+    {
+        try {
+            $stmt = $this->db->prepare("INSERT INTO publisher (id, name, address, phone) VALUES (:id, :name, :address, :phone)");
+            $stmt->bindParam(':id', $this->id);
+            $stmt->bindParam(':name', $this->name);
+            $stmt->bindParam(':address', $this->address);
+            $stmt->bindParam(':phone', $this->phone);
+            $result = $stmt->execute();
+        } catch (\PDOException $e) {
+            http_response_code(500);
+            $result = ["message" => $e->getMessage()];
+        }
+        return $result;
+    }
+    
+    public static function all(): array
+    {
+        $publishers = [];
+        $model = new Model();
+        $db = $model->getDB();
+        $stmt = $db->prepare("SELECT * FROM publisher");
+        if ($stmt->execute()) {
+            $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            foreach ($results as $item) {
+                $publishers[] = new Publisher($item['id'], $item['name'], $item['address'], $item['phone']);
+            }
+        } else {
+            $publishers = null;
+        }
+        return $publishers;
     }
 
-    public function setPhone(int $phone): void {
-        $this->phone = $phone;
-    }
-
-    public function getPhone(): int {
-        return $this->phone;
+    public function detail($id)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM publisher WHERE id = :id");
+        $stmt->bindParam(':id', $id);
+        if ($stmt->execute()) {
+            $publisher = $stmt->fetch(\PDO::FETCH_ASSOC);
+            $this->id = $publisher['id'];
+            $this->name = $publisher['name'];
+            $this->address = $publisher['address'];
+            $this->phone = $publisher['phone'];
+        } else {
+            $publisher = null;
+        }
     }
 }
