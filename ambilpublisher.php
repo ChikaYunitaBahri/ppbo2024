@@ -5,5 +5,5 @@ use App\View;
 
 require_once 'vendor/autoload.php';
 
-$publishers = Publisher::all();
-View::json($publishers);
+$publisher = Publisher::all();
+View::json($publisher);

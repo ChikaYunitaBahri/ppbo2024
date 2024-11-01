@@ -6,27 +6,49 @@ use App\Model\Model;
 
 class Publisher extends Model
 {
-    public int $id;
+    public string $id;
     public string $name;
     public string $address;
     public string $phone;
 
+    public function setPhone(string $phone): void
+    {
+        $this->phone = $phone;
+    }
+
+    public function getPhone(): string
+    {
+        return $this->phone;
+    }
+
     public function save()
     {
         try {
-            $stmt = $this->db->prepare("INSERT INTO publisher (id, name, address, phone) VALUES (:id, :name, :address, :phone)");
-            $stmt->bindParam(':id', $this->id);
+            $stmt = $this->db->prepare("
+            INSERT INTO publisher
+            (name , address, phone)
+            VALUES
+            (:name , :address, :phone)
+            ");
             $stmt->bindParam(':name', $this->name);
             $stmt->bindParam(':address', $this->address);
             $stmt->bindParam(':phone', $this->phone);
-            $result = $stmt->execute();
+            $status = $stmt->execute();
+           
+            $stmt = $this->db->query("SELECT LAST_INSERT_ID()");
+            $last_id = $stmt->fetchColumn();
+
+            $result = [
+                'status'=> $status,
+                'id'=> $last_id
+            ];
         } catch (\PDOException $e) {
             http_response_code(500);
             $result = ["message" => $e->getMessage()];
         }
         return $result;
     }
-    
+
     public static function all(): array
     {
         $publishers = [];
@@ -40,7 +62,7 @@ class Publisher extends Model
                 $publishers[$key]->id = $item['id'];
                 $publishers[$key]->name = $item['name'];
                 $publishers[$key]->address = $item['address'];
-                $publishers[$key]->phone =$item['phone'];
+                $publishers[$key]->phone = $item['phone'];
             }
         } else {
             $publishers = null;
@@ -50,8 +72,7 @@ class Publisher extends Model
 
     public function detail($id)
     {
-        $stmt = $this->db->prepare("SELECT * FROM publisher WHERE id = :id");
-        $stmt->bindParam(':id', $id);
+        $stmt = $this->db->prepare("SELECT * FROM publisher WHERE id= {$id}");
         if ($stmt->execute()) {
             $publisher = $stmt->fetch(\PDO::FETCH_ASSOC);
             $this->id = $publisher['id'];
