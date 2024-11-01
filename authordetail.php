@@ -6,5 +6,6 @@ use App\View;
 require_once 'vendor/autoload.php';
 
 $author = new Author();
-$author->detail(6);
+$id = $_GET['id'];
+$author->detail($id);
 View::json($author);
