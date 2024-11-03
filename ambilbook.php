@@ -5,5 +5,5 @@ use App\View;
 
 require_once 'vendor/autoload.php';
 
-$authors = Book::all();
-View::json($authors);
+$books = Book::all();
+View::json($books);
